@@ -7,8 +7,6 @@ fi
 
 USER=${HOME##*/}
 DISTRO=$(lsb_release -c -s)
-read -p "Enter your github username: " USERNAME
-read -p "Enter your github email: " EMAIL
 
 # change to aliyun repository
 cp /etc/apt/sources.list /etc/apt/sources.list.bak
@@ -69,10 +67,17 @@ apt-get install libssl-dev libffi-dev -yq
 apt-get install git zsh curl -yq
 
 # config git
-git config --global user.name "$USERNAME"
-git config --global user.email "$EMAIL"
+if ! git config --global --list | grep -q 'user.name'; then
+  read -p "Enter your github username: " USERNAME
+  git config --global user.name "$USERNAME"
+fi
+if ! git config --global --list | grep -q 'user.email'; then
+  read -p "Enter your github email: " EMAIL
+  git config --global user.email "$EMAIL"
+fi
 git config --global credential.helper cache
 git config --global credential.helper 'cache --timeout=3600'
+git config --global push.default simple
 
 # install oh-my-zsh
 curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
