@@ -7,8 +7,8 @@ fi
 
 USER=${HOME##*/}
 DISTRO=$(lsb_release -c -s)
-read -p "Enter your username:" USERNAME
-read -p "Enter your email:" EMAIL
+read -p "Enter your github username: " USERNAME
+read -p "Enter your github email: " EMAIL
 
 # change to aliyun repository
 cp /etc/apt/sources.list /etc/apt/sources.list.bak
