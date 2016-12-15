@@ -149,6 +149,19 @@
     " set it to the first line when editing a git commit message
     au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
 
+    " Restore cursor to file position in previous editing session
+    function! ResCur()
+        if line("'\"") <= line("$")
+            silent! normal! g`"
+            return 1
+        endif
+    endfunction
+
+    augroup resCur
+        autocmd!
+        autocmd BufWinEnter * call ResCur()
+    augroup END
+
     " Setting up the directories {
         set backup                  " Backups are nice ...
         if has('persistent_undo')
@@ -212,6 +225,7 @@
     set scrolljump=5                " Lines to scroll when cursor leaves screen
     set scrolloff=3                 " Minimum lines to keep above and below cursor
     set foldenable                  " Auto fold code
+    set foldlevel=20
 " }
 
 " Formatting {
@@ -226,6 +240,9 @@
     set splitbelow                  " Puts new split windows to the bottom of the current
     "set matchpairs+=<:>             " Match, to be used with %
     set pastetoggle=<F11>           " pastetoggle (sane indentation on pastes)
+    " highlight columns 80
+    set colorcolumn=80
+    highlight ColorColumn ctermbg=232 guibg=#000000
     "set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
     " Remove trailing whitespaces and ^M chars
     autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl,sql autocmd BufWritePre <buffer> call StripTrailingWhitespace()
