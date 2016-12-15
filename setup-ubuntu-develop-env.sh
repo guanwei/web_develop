@@ -37,11 +37,11 @@ if [ -z `command -v powershell` ]; then
   Install-Module AWSPowerShell
 fi
 
-# install openssh-server 
+# install openssh-server
 apt-get install openssh-server -yq
 
 # install vim
-apt-get install vim -yq
+apt-get install vim vim-nox -yq
 
 # install mysql
 apt-get install mysql-server libmysqlclient-dev -yq
@@ -142,7 +142,7 @@ EOF
 fi
 
 # install python plugins
-pip install --upgrade httpie django flask Mako mysql-python SQLAlchemy Flask-SQLAlchemy python-magic Pillow cropresize2 short_url blinker flask-login flask-script flask-debugtoolbar Flask-Migrate Flask-WTF flask-security flask-restful Flask-Admin webassets flask-assets jsmin cssmin pyscss Werkzeug tornado gunicorn uwsgi libmc redis pymongo mongoengine supervisor fabric 
+pip install --upgrade httpie django flask Mako mysql-python SQLAlchemy Flask-SQLAlchemy python-magic Pillow cropresize2 short_url blinker flask-login flask-script flask-debugtoolbar Flask-Migrate Flask-WTF flask-security flask-restful Flask-Admin webassets flask-assets jsmin cssmin pyscss Werkzeug tornado gunicorn uwsgi libmc redis pymongo mongoengine supervisor fabric
 
 # install babel
 npm install --global babel-cli babel-preset-es2015
