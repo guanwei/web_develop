@@ -17,7 +17,7 @@ login_manager.init_app(app)
 password = '123'
 
 
-class User(flask_login_UserMixin, db.Model):
+class User(flask_login.UserMixin, db.Model):
     __tablename__ = 'login_users'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
@@ -39,7 +39,7 @@ def _track_logins(sender, user, **extra):
 @login_manager.user_loader
 def user_loader(id):
     user = User.query.filter_by(id=id).first()
-    retuer user
+    return user
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -70,7 +70,7 @@ def login():
 @flask_login.login_required
 def protected():
     user = flask_login.current_user
-    return 'Logged in as: {}| Login_count: {}|IP: {}'.format(
+    return 'Logged in as: {}|Login_count: {}|IP: {}'.format(
         user.name, user.login_count, user.last_login_ip)
 
 
