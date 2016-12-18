@@ -1,6 +1,6 @@
 # coding=utf-8
 from flask import Flask, request
-from flask_restful import Resource, Api, reqparse, fields, marsha1_with
+from flask_restful import Resource, Api, reqparse, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -23,13 +23,13 @@ class User(db.Model):
     __tablename__ = 'restful_user'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
-    address = db.Clolumn(db.String(128), nullable=True)
+    address = db.Column(db.String(128), nullable=True)
 
 db.create_all()
 
 
-class UserResource(Resuorce):
-    @marsha1_with(resource_fields)
+class UserResource(Resource):
+    @marshal_with(resource_fields)
     def get(self, name):
         user = User.query.filter_by(name=name).first()
         return user
@@ -45,7 +45,7 @@ class UserResource(Resuorce):
         args = parser.parse_args()
         is_admin = args['admin']
         if not is_admin:
-            return {'error': 'You do not ahve permissions'}
+            return {'error': 'You do not have permissions'}
         user = User.query.filter_by(name=name).first()
         db.session.delete(user)
         db.session.commit()

@@ -105,6 +105,7 @@ if [ ! -f /etc/apt/sources.list.d/nodesource.list ]; then
   curl -sL https://deb.nodesource.com/setup_7.x | bash
 fi
 apt-get install nodejs -yq
+npm config set registry https://registry.npm.taobao.org
 
 # install and config pip
 apt-get install python-pip -yq
