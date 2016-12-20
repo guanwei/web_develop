@@ -65,7 +65,7 @@ def index():
             'url_p': paste_file.url_p,
             'filename': paste_file.filename,
             'size': humanize_bytes(paste_file.size),
-            'time': str(paste_file.uplaodtime),
+            'time': str(paste_file.uploadtime),
             'type': paste_file.type,
             'quoteurl': paste_file.quoteurl
         })

@@ -143,7 +143,12 @@ EOF
 fi
 
 # install python plugins
-pip install --upgrade httpie django flask Mako mysql-python SQLAlchemy Flask-SQLAlchemy python-magic Pillow cropresize2 short_url blinker flask-login flask-script flask-debugtoolbar Flask-Migrate Flask-WTF flask-security flask-restful Flask-Admin webassets flask-assets jsmin cssmin pyscss Werkzeug tornado gunicorn uwsgi libmc redis pymongo mongoengine supervisor fabric
+pip install --upgrade httpie django flask Mako mysql-python SQLAlchemy \
+Flask-SQLAlchemy python-magic Pillow cropresize2 short_url blinker \
+flask-login flask-script flask-debugtoolbar Flask-Migrate Flask-WTF \
+flask-security flask-restful Flask-Admin webassets flask-assets jsmin \
+cssmin pyscss Werkzeug tornado gunicorn uwsgi libmc redis pymongo \
+mongoengine supervisor fabric
 
 # install babel
 npm install --global babel-cli babel-preset-es2015

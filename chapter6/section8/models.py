@@ -81,5 +81,98 @@ class PasteFile(Document):
         return rs[0] if rs else None
 
     @classmethod
-    def
+    def create_by_upload_file(cls, uploaded_file):
+        rst = cls(uploaded_file.filename, uploaded_file.mimetype, 0)
+        uploaded_file.save(rst.path)
+        with open(rst.path) as f:
+            filemd5 = get_file_md5(f)
+            uploaded_file = cls.get_by_md5(filemd5)
+            if uploaded_file:
+                os.remove(rst.path)
+                return uploaded_file
+        filestat = os.stat(rst.path)
+        rst.size = filestat.st_size
+        rst.filemd5 = filemd5
+        return rst
 
+    @classmethod
+    def create_by_old_paste(cls, filehash):
+        filepath = get_file_path(filehash)
+        mimetype = magic.from_file(filepath, mime=True)
+        filestat = os.stat(filepath)
+        size = filestat.st_size
+
+        rst = cls(filehash, mimetype, size, filehash=filehash)
+        return rst
+
+    @property
+    def path(self):
+        return get_file_path(self.filehash)
+
+    def get_url(self, subtype, is_symlink=False):
+        hash_or_link = self.symlink if is_symlink else self.filehash
+        return 'http://{host}/{subtype}/{hash_or_link}'.format(
+            subtype=subtype, host=request.host, hash_or_link=hash_or_link)
+
+    @property
+    def url_i(self):
+        return self.get_url('i')
+
+    @property
+    def url_p(self):
+        return self.get_url('p')
+
+    @property
+    def url_s(self):
+        return self.get_url('s', is_symlink=True)
+
+    @property
+    def url_d(self):
+        return self.get_url('d')
+
+    @property
+    def image_size(self):
+        if self.is_image:
+            im = Image.open(self.path)
+            return im.size
+        return (0, 0)
+
+    @property
+    def quoteurl(self):
+        return urllib.quote(self.url_i)
+
+    @classmethod
+    def rsize(cls, old_paste, weight, height):
+        assert old_paste.is_image, TypeError('Unsupported Image Type.')
+
+        img = cropresize2.crop_resize(
+            Image.open(old_paste.path), (int(weight), int(height)))
+
+        rst = cls(old_paste.filename, old_paste.mimetype, 0)
+        img.save(rst.path)
+        filestat = os.stat(rst.path)
+        rst.size = filestat.st_size
+        return rst
+
+    @property
+    def is_image(self):
+        return self.mimetype in IMAGE_MIMES
+
+    @property
+    def is_audio(self):
+        return self.mimetype in AUDIO_MIMES
+
+    @property
+    def is_video(self):
+        return self.mimetype in VIDEO_MIMES
+
+    @property
+    def is_pdf(self):
+        return self.mimetype == 'application/pdf'
+
+    @property
+    def type(self):
+        for t in ('image', 'pdf', 'video', 'audio'):
+            if getattr(self, 'is_' + t):
+                return t
+        return 'binary'
