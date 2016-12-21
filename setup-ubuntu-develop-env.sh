@@ -8,6 +8,9 @@ fi
 USER=${HOME##*/}
 DISTRO=$(lsb_release -c -s)
 
+# set using sudo no password
+echo "$USER ALL=(ALL) NOPASSWD: ALL" | tee /etc/sudoers.d/user-init
+
 # change to aliyun repository
 cp /etc/apt/sources.list /etc/apt/sources.list.bak
 cat > /etc/apt/sources.list <<-EOF
@@ -56,6 +59,11 @@ apt-get update
 apt-get install mongodb-org -yq
 systemctl enable mongod
 systemctl start mongod
+
+# install salt-master salt-minion
+apt-get install software-properties-common -yq
+add-apt-repository ppa:saltstack/salt
+apt-get install salt-master salt-minion
 
 # install libjpeg8-dev
 apt-get install libjpeg8-dev -yq
