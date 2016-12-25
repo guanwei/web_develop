@@ -25,11 +25,25 @@ deb-src http://mirrors.aliyun.com/ubuntu/ ${DISTRO}-updates main restricted univ
 deb-src http://mirrors.aliyun.com/ubuntu/ ${DISTRO}-backports main restricted universe multiverse
 EOF
 apt-get update
-apt-get upgrade -yq
+apt-get dist-upgrade -yq
+
+# install docker
+apt-get install apt-transport-https ca-certificates -yq
+apt-key adv \
+            --keyserver hkp://ha.pool.sks-keyservers.net:80 \
+            --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+echo "deb https://apt.dockerproject.org/repo ubuntu-${DISTRO} main" | \
+	tee /etc/apt/sources.list.d/docker.list
+apt-get update
+apt-get install linux-image-extra-$(uname -r) linux-image-extra-virtual -yq
+apt-get install docker-engine -yq
 
 # install mono
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-echo "deb http://download.mono-project.com/repo/debian wheezy main" | tee /etc/apt/sources.list.d/mono-xamarin.list
+apt-key adv \
+			--keyserver hkp://keyserver.ubuntu.com:80 \
+			--recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+echo "deb http://download.mono-project.com/repo/debian wheezy main" | \
+	tee /etc/apt/sources.list.d/mono-xamarin.list
 apt-get update
 apt-get install mono-complete libmono-system2.0-cil -yq
 
@@ -62,8 +76,15 @@ systemctl start mongod
 
 # install salt-master salt-minion
 apt-get install software-properties-common -yq
-add-apt-repository ppa:saltstack/salt
-apt-get install salt-master salt-minion
+apt-add-repository ppa:saltstack/salt -y
+apt-get update
+apt-get install salt-master salt-minion salt-ssh -yq
+
+# install ansible
+apt-get install software-properties-common -yq
+apt-add-repository ppa:ansible/ansible -y
+apt-get update
+apt-get install ansible -yq
 
 # install libjpeg8-dev
 apt-get install libjpeg8-dev -yq
